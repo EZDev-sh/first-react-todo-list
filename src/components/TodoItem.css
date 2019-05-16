@@ -23,6 +23,7 @@
 
 
 .remove {
+    margin-left: auto;
     margin-right: 1rem;
     color: #e64980;
     font-weight: 600;
@@ -30,11 +31,18 @@
 }
 
 .todo-text {
-flex: 1; /* 체크, 엑스를 제외한 공간 다 채우기 */
+    flex: 1; /* 체크, 엑스를 제외한 공간 다 채우기 */
     word-break: break-all;
 }
 
-.checked {
+.todo-date {
+    flex: 0.1;
+    text-align: center;
+    margin-left: auto;
+    /* padding-right: 4rem; */
+}
+
+.checked { 
     text-decoration: line-through;
     color: #adb5bd;
 }
@@ -42,7 +50,7 @@ flex: 1; /* 체크, 엑스를 제외한 공간 다 채우기 */
 .check-mark {
     font-size: 1.5rem;
     line-height: 1rem;
-    margin-left: 1rem;
-    color: #3bc9db;
+    padding-right: 1rem;
+    color: #FF6F61;
     font-weight: 800;
 }
