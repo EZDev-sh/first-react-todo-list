@@ -3,7 +3,7 @@ import TodoItem from './TodoItem';
 
 class TodoItemList extends Component {
     render() {
-        const { todos, onToggle, onRemove } = this.props;
+        const { todos, onToggle, onRemove, onOpen } = this.props;
     
         const todoList = todos.map(
           ({id, text, due_date, checked}) => (
@@ -14,6 +14,7 @@ class TodoItemList extends Component {
               checked={checked}
               onToggle={onToggle}
               onRemove={onRemove}
+              onOpen={onOpen}
               key={id}
             />
           )

@@ -4,7 +4,7 @@ import ModifyImg  from '../assets/images/modify_icon.png';
 
 class TodoItem extends Component {
   render() {
-    const { text, due_date, checked, id, onToggle, onRemove, onModify } = this.props;
+    const { text, due_date, checked, id, onToggle, onRemove, onOpen /*onModify*/ } = this.props;
 
     return (
       <div className="todo-item" onClick={() => onToggle(id)}>
@@ -17,9 +17,9 @@ class TodoItem extends Component {
         <div className="todo-date">
           <div>{due_date}</div>
         </div>
-        <div className="modify" oncClick={(e) => {
+        <div className="modify" onClick={(e) => {
           e.stopPropagation();
-          onModify(id)
+          onOpen(id)
         }}>
           <img className="modify-icon" src={ModifyImg}/>
         </div>

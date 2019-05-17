@@ -4,21 +4,20 @@ import Form from './components/Form';
 import TodoItemList from './components/TodoItemList';
 import CalendarPopup from './components/CalendarPopup';
 import NoneContentPopup from './components/NoneContentPopup';
+import ModifyPopup from './components/ModifyPopup';
 
 class App extends Component {
-  id = 3 // 이미 0,1,2 가 존재하므로 3으로 설정
+  id = 0 // 이미 0,1,2 가 존재하므로 3으로 설정
 
   state = {
     date: new Date(),
     visible: false,
+    modify_visible: false,
     input_check: false,
     input: '',
     due_date: '-',
-    todos: [
-      // { id: 0, text: ' 리액트 소개', checked: false },
-      // { id: 1, text: ' 리액트 소개', checked: true },
-      // { id: 2, text: ' 리액트 소개', checked: false }
-    ]
+    send_id: 0,
+    todos: []
   }
 
   // table item click
@@ -50,12 +49,38 @@ class App extends Component {
     });
   }
 
-  // table item modify
-  handleModify = (id) => {
-
+  handleOpenModify = (id) => {
+    this.setState({
+      modify_visible: true,
+      send_id : id,
+    });
   }
 
+  handleCloseModify = (id, content, change_date) => {
+    console.log(id, content, change_date);
+    const { todos } = this.state;
 
+    // 파라미터로 받은 id 를 가지고 몇번째 아이템인지 찾습니다.
+    const index = todos.findIndex(todo => todo.id === id);
+    const selected = todos[index]; // 선택한 객체
+
+    const nextTodos = [...todos]; // 배열을 복사
+
+    // 기존의 값들을 복사하고, checked 값을 덮어쓰기
+    nextTodos[index] = { 
+      ...selected, 
+      text: content,
+      due_date: change_date,
+    };
+
+    this.setState({
+      todos: nextTodos,
+      modify_visible: false
+    });
+
+    
+  }
+  
   // get input dom data
   handleChange = (e) => {
     this.setState({
@@ -67,7 +92,7 @@ class App extends Component {
   handleCreate = () => {
     const { input, todos, due_date } = this.state;
     if (input === '') {
-      this.handleOpenNoneContent()
+      this.handleOpenNoneContent();
     }
     else {
       this.setState({
@@ -90,7 +115,7 @@ class App extends Component {
     // 눌려진 키가 Enter 면 handleCreate 호출
     if (e.key === 'Enter') {
       if (this.state.input === '') {
-        this.handleOpenNoneContent()
+        this.handleOpenNoneContent();
       }
       else {
         this.handleCreate();
@@ -119,14 +144,14 @@ class App extends Component {
   handleOpenNoneContent = () => {
     this.setState({
       input_check: true
-    })
+    });
   }
 
   // NoneContetnPopup close
   handelCloseNoneContent = () => {
     this.setState({
       input_check: false,
-    })
+    });
   }
 
   // 달력에서 선택한 날짜데이터 가져오기
@@ -134,7 +159,7 @@ class App extends Component {
 
 
   render() {
-    const { input, todos, visible, date, input_check } = this.state;
+    const { send_id, input, todos, visible, date, input_check, modify_visible } = this.state;
     const {
       handleChange,
       handleCreate,
@@ -144,8 +169,9 @@ class App extends Component {
       handleDate,
       handleToggle,
       handleRemove,
-      handleModify,
       handelCloseNoneContent,
+      handleOpenModify,
+      handleCloseModify,
     } = this;
 
     return (
@@ -160,7 +186,12 @@ class App extends Component {
             onCalendar={handleOpenCalendar}
           />
         )}>
-          <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove} onModify={handleModify}/>
+          <TodoItemList 
+            todos={todos} 
+            onToggle={handleToggle} 
+            onRemove={handleRemove} 
+            onOpen={handleOpenModify}
+            />
         </TodoListTemplate>
         
         {/* Calendar 팝업창 on/off */}
@@ -180,7 +211,13 @@ class App extends Component {
           />
           : null
         }
-
+        {modify_visible ?
+          <ModifyPopup
+            id={send_id}
+            onClose={handleCloseModify}
+          />
+          : null
+        }
       </div>
 
     );
