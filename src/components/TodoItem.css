@@ -12,7 +12,11 @@
 }
 
 /* todo-item 에 마우스가 있을때만 .remove 보이기 */
-.todo-item:hover .remove {
+.todo-item:hover .remove{
+    opacity: 1;
+}
+
+.todo-item:hover .modify {
     opacity: 1;
 }
 
@@ -29,7 +33,17 @@
     font-weight: 600;
     opacity: 0;
 }
+.modify {
+    margin-left: auto;
+    margin-right: 1rem;
+    color: black;
+    font-weight: 200;
+    opacity:  0;
+}
 
+.modify-icon {
+    height: 25px;
+}
 .todo-text {
     flex: 1; /* 체크, 엑스를 제외한 공간 다 채우기 */
     word-break: break-all;

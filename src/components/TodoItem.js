@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './TodoItem.css';
+import ModifyImg  from '../assets/images/modify_icon.png';
 
 class TodoItem extends Component {
   render() {
-    const { text, due_date, checked, id, onToggle, onRemove } = this.props;
+    const { text, due_date, checked, id, onToggle, onRemove, onModify } = this.props;
 
     return (
       <div className="todo-item" onClick={() => onToggle(id)}>
@@ -15,6 +16,12 @@ class TodoItem extends Component {
         </div>
         <div className="todo-date">
           <div>{due_date}</div>
+        </div>
+        <div className="modify" oncClick={(e) => {
+          e.stopPropagation();
+          onModify(id)
+        }}>
+          <img className="modify-icon" src={ModifyImg}/>
         </div>
         <div className="remove" onClick={(e) => {
           e.stopPropagation(); // onToggle 이 실행되지 않도록 함
