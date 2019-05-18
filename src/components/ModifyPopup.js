@@ -36,7 +36,7 @@ class ModifyPopup extends Component {
     handleKeyPress = (e) => {
         // 눌려진 키가 Enter 면 handleCreate 호출
         if (e.key === 'Enter') {
-            this.props.onClose()
+            this.props.onClose(this.props.id, this.state.modify_input, this.state.due_date)
         }
     }
     render() {
