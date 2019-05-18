@@ -91,6 +91,7 @@ class App extends Component {
   // create new table item
   handleCreate = () => {
     const { input, todos, due_date } = this.state;
+    console.log(input)
     if (input === '') {
       this.handleOpenNoneContent();
     }
