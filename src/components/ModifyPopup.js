@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import './ModifyPopup.css'
+
 import Calendar from './CalendarPopup'
+import CalendarIcon from '../assets/images/calendar-icon.png';
 
 class ModifyPopup extends Component {
 
     state = {
-        modify_input: '',
+        modify_input: this.props.text,
         visibel: false,
         date: new Date(),
-        due_date: '-',
+        due_date: this.props.date,
     }
 
     handleOpenCal = () => {
@@ -56,15 +58,14 @@ class ModifyPopup extends Component {
             handleSelectCal,
             handleDate
         } = this
+
         return (
             <div className="modify-popup">
                 <div className="modify-content">
                     <div className='close-btn' onClick={onClose}>X</div>
                     <div className="bk">
                         <input value={modify_input} onChange={handleChange} onKeyPress={handleKeyPress} />
-                        <div className="cal-btn" onClick={handleOpenCal}>
-                            Calendar
-                        </div>
+                        <img className="cal-icon" onClick={handleOpenCal} src={CalendarIcon} alt='calendaricon'/>
                     </div>
                     <div className="complete-button" onClick={() =>
                         onComplete(id, modify_input, due_date)

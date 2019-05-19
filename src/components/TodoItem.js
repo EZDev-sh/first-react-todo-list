@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './TodoItem.css';
+
 import ModifyImg from '../assets/images/modify_icon.png';
 
 class TodoItem extends Component {
