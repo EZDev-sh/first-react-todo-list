@@ -6,6 +6,7 @@ import CalendarPopup from './components/CalendarPopup';
 import NoneContentPopup from './components/NoneContentPopup';
 import ModifyPopup from './components/ModifyPopup';
 
+
 class App extends Component {
   id = 0 // 이미 0,1,2 가 존재하므로 3으로 설정
 
@@ -31,8 +32,8 @@ class App extends Component {
     const nextTodos = [...todos]; // 배열을 복사
 
     // 기존의 값들을 복사하고, checked 값을 덮어쓰기
-    nextTodos[index] = { 
-      ...selected, 
+    nextTodos[index] = {
+      ...selected,
       checked: !selected.checked
     };
 
@@ -52,12 +53,18 @@ class App extends Component {
   handleOpenModify = (id) => {
     this.setState({
       modify_visible: true,
-      send_id : id,
+      send_id: id,
     });
   }
 
-  handleCloseModify = (id, content, change_date) => {
-    console.log(id, content, change_date);
+  handleCloseModify = () => {
+    this.setState({
+      modify_visible: false,
+    })
+    
+  }
+
+  handleCompleteModify = (id, content, change_date) => {
     const { todos } = this.state;
 
     // 파라미터로 받은 id 를 가지고 몇번째 아이템인지 찾습니다.
@@ -67,8 +74,8 @@ class App extends Component {
     const nextTodos = [...todos]; // 배열을 복사
 
     // 기존의 값들을 복사하고, checked 값을 덮어쓰기
-    nextTodos[index] = { 
-      ...selected, 
+    nextTodos[index] = {
+      ...selected,
       text: content,
       due_date: change_date,
     };
@@ -80,7 +87,7 @@ class App extends Component {
 
     
   }
-  
+
   // get input dom data
   handleChange = (e) => {
     this.setState({
@@ -98,7 +105,7 @@ class App extends Component {
     else {
       this.setState({
         // 다시 초기화
-        input: '', 
+        input: '',
         due_date: '-',
         // concat 을 사용하여 배열에 추가
         todos: todos.concat({
@@ -121,7 +128,7 @@ class App extends Component {
       else {
         this.handleCreate();
       }
-      
+
     }
   }
 
@@ -136,9 +143,15 @@ class App extends Component {
   handleCloseCalendar = () => {
     this.setState({
       visible: false,
+      due_date: '-',
+    });
+  }
+
+  handleSelectDate = () => {
+    this.setState({
+      visible: false,
       due_date: this.state.date.toString().substring(4,10)
     });
-
   }
 
   // NoneContentPopup open
@@ -156,7 +169,7 @@ class App extends Component {
   }
 
   // 달력에서 선택한 날짜데이터 가져오기
-  handleDate = date => this.setState({date})
+  handleDate = date => this.setState({ date })
 
 
   render() {
@@ -173,6 +186,8 @@ class App extends Component {
       handelCloseNoneContent,
       handleOpenModify,
       handleCloseModify,
+      handleSelectDate,
+      handleCompleteModify,
     } = this;
 
     return (
@@ -187,19 +202,21 @@ class App extends Component {
             onCalendar={handleOpenCalendar}
           />
         )}>
-          <TodoItemList 
-            todos={todos} 
-            onToggle={handleToggle} 
-            onRemove={handleRemove} 
+          <TodoItemList
+            todos={todos}
+            onToggle={handleToggle}
+            onRemove={handleRemove}
             onOpen={handleOpenModify}
-            />
+          />
+
         </TodoListTemplate>
-        
+
         {/* Calendar 팝업창 on/off */}
         {visible ?
           <CalendarPopup
             date={date}
             changeDate={handleDate}
+            onSelect={handleSelectDate}
             onClose={handleCloseCalendar}
 
           />
@@ -215,6 +232,7 @@ class App extends Component {
         {modify_visible ?
           <ModifyPopup
             id={send_id}
+            onComplete={handleCompleteModify}
             onClose={handleCloseModify}
           />
           : null

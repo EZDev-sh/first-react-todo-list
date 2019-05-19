@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-// import uniqueId from 'lodash/uniqueId';
-// import Sortable from 'react-sortablejs';
 import TodoItem from './TodoItem';
 
 class TodoItemList extends Component {
+  
   render() {
+
     const { todos, onToggle, onRemove, onOpen } = this.props;
 
     const todoList = todos.map(
@@ -21,13 +21,14 @@ class TodoItemList extends Component {
         />
       )
     );
-
     return (
       <div>
         {todoList}
       </div>
     );
+
   }
+
 
 }
 

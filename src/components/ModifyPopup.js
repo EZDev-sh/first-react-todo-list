@@ -18,11 +18,18 @@ class ModifyPopup extends Component {
     }
 
     handleCloseCal = () => {
+        this.setState({
+            visibel:false,
+            due_date: '-'
+        })
+    }
+
+    handleSelectCal = () => {
         this.setState ({
             visibel: false,
             due_date: this.state.date.toString().substring(4,10)
         });
-    }
+      }
 
     handleDate = date => this.setState({date})
 
@@ -41,16 +48,18 @@ class ModifyPopup extends Component {
     }
     render() {
         const { modify_input, visibel, date, due_date } = this.state;
-        const { onClose, id } = this.props;
+        const { onClose, onComplete, id } = this.props;
         const { handleKeyPress, 
             handleChange, 
             handleOpenCal, 
             handleCloseCal,
+            handleSelectCal,
             handleDate
         } = this
         return (
             <div className="modify-popup">
                 <div className="modify-content">
+                    <div className='close-btn' onClick={onClose}>X</div>
                     <div className="bk">
                         <input value={modify_input} onChange={handleChange} onKeyPress={handleKeyPress} />
                         <div className="cal-btn" onClick={handleOpenCal}>
@@ -58,16 +67,17 @@ class ModifyPopup extends Component {
                         </div>
                     </div>
                     <div className="complete-button" onClick={() =>
-                        onClose(id, modify_input, due_date)
+                        onComplete(id, modify_input, due_date)
                     }>
                         Complete
                     </div>
                 </div>
 
                 {visibel ?
-                    <Calendar
-                        date = {date}
+                    <Calendar 
+                        date={date}
                         changeDate={handleDate}
+                        onSelect={handleSelectCal}
                         onClose={handleCloseCal}
                     />
                     : null

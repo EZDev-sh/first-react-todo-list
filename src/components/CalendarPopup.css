@@ -11,6 +11,20 @@
     display: flex; 
     
 }
+.close-button {
+    padding: 0.5rem;
+    padding-bottom: 0rem;
+    background: #FF6F61;
+    border-radius: 5px;
+    color: white;
+    font-weight: 900;
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+    text-align: center;
+    align-items: center;
+    cursor: pointer;
+}
 .item-row {
     margin: auto;
     flex-direction: row;
