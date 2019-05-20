@@ -5,7 +5,7 @@ import TodoItemList from './components/TodoItemList';
 import CalendarPopup from './components/CalendarPopup';
 import NoneContentPopup from './components/NoneContentPopup';
 import ModifyPopup from './components/ModifyPopup';
-
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 class App extends Component {
   id = 0;
@@ -53,6 +53,8 @@ class App extends Component {
     this.setState({
       todos: todos.filter(todo => todo.id !== id)
     });
+
+
   }
 
   /**********************************************************************
@@ -93,7 +95,7 @@ class App extends Component {
         due_date: '-',
         // concat 을 사용하여 배열에 추가
         todos: todos.concat({
-          id: this.id++,
+          id: (this.id++).toString(),
           text: input,
           due_date: due_date,
           checked: false
@@ -112,6 +114,7 @@ class App extends Component {
     this.setState({
       visible: true
     });
+    console.log(this.state.todos)
   }
 
   // Calendar 팝업 닫기
@@ -158,10 +161,13 @@ class App extends Component {
   // 테이블 아이템이 수정이 이루어졌을때 
   handleCompleteModify = (id, content, change_date) => {
     const { todos } = this.state;
+    console.log(id, content, change_date);
 
     // 파라미터로 받은 id 를 가지고 몇번째 아이템인지 찾습니다.
     const index = todos.findIndex(todo => todo.id === id);
     const selected = todos[index]; // 선택한 객체
+
+    console.log(selected)
 
     const nextTodos = [...todos]; // 배열을 복사
 
@@ -172,6 +178,8 @@ class App extends Component {
       due_date: change_date,
     };
 
+    console.log(nextTodos)
+
     // 변경된 내용 반영 및 팝업창을 닫는다.
     this.setState({
       todos: nextTodos,
@@ -180,9 +188,13 @@ class App extends Component {
   }
   // 수정 하려는 아이템 id 설정 및 팝업 창 연다.
   handleOpenModify = (id) => {
+
+    const { todos } = this.state;
+    console.log(todos)
+    const index = todos.findIndex(todo => todo.id === id);
     this.setState({
       modify_visible: true,
-      send_id: id,
+      send_id: index,
     });
   }
   // 수정을 하지않고 창을 닫는다.
@@ -193,7 +205,33 @@ class App extends Component {
 
   }
 
+  /**********************************************************************
+   * Drag and Drop 작업 관련 함수
+   * TableItem의 행을 이동 시킨다.
+   **********************************************************************/
+  onDragEnd = result => {
+    const { source, destination } = result;
 
+    // 기본 틀에서 벗어나면 원상복귀
+    if (!destination) {
+      return;
+    }
+
+    // 기본 틀 안에 있을경우
+    if (source.droppableId === destination.droppableId) {
+      // 기존 배열 복사
+      const nextTodos = [...this.state.todos];
+      // 선택한 TableItem 
+      const [clickItem] = nextTodos.splice(source.index, 1);
+      // 이동하고자 하는곳에 선택한 TableItem을 추가한다.
+      nextTodos.splice(destination.index, 0, clickItem)
+
+      // 변경한 값을 적용
+      this.setState({
+        todos: nextTodos,
+      })
+    } 
+  };
 
 
   render() {
@@ -212,6 +250,7 @@ class App extends Component {
       handleCloseModify,
       handleSelectDate,
       handleCompleteModify,
+      onDragEnd,
     } = this;
 
     return (
@@ -225,14 +264,22 @@ class App extends Component {
             onCreate={handleCreate}
             onCalendar={handleOpenCalendar}
           />
-        )}>
-          <TodoItemList
-            todos={todos}
-            onToggle={handleToggle}
-            onRemove={handleRemove}
-            onOpen={handleOpenModify}
-          />
 
+        )}>
+          
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId='droppable'>
+              {(provided) => (
+                <TodoItemList
+                todos={todos}
+                onToggle={handleToggle}
+                onRemove={handleRemove}
+                onOpen={handleOpenModify}
+                provided={provided}
+              />
+              )}
+            </Droppable>
+          </DragDropContext>
         </TodoListTemplate>
 
         {/* Calendar 팝업창 on/off */}
@@ -255,7 +302,7 @@ class App extends Component {
         }
         {modify_visible ?
           <ModifyPopup
-            id={send_id}
+            id={send_id.toString()}
             text={todos[send_id].text}
             date={todos[send_id].due_date}
             onComplete={handleCompleteModify}
