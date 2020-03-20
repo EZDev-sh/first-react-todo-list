@@ -1,5 +1,4 @@
 # TODO list
-이 repo는 프로그래머스 2019 서머코딩 2차 과제 제출용 repo입니다. 제가 지원하는 분야는 웹/서버 분야이며 TODO list 만들기 입니다. </br>
 
 ### 제작 기술
 * node.js (version: 12.1.0)
